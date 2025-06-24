@@ -11,28 +11,28 @@ with master_table as
     tb1
     group by 1,2
 ),
-
+-- ------------------------------------------------------------------------------------------------------------
 ranked_cte as
 (
 select *,
         dense_rank()over(partition by time order by sum_of_comments desc) as ranked
 from master_table
 ),
-
+-- ------------------------------------------------------------------------------------------------------------
 2019_cte as
 (
 select country, sum_of_comments as 2019_c, ranked as 2019_rank
 from ranked_cte
 where time = '12-2019'
 ),
-
+-- ------------------------------------------------------------------------------------------------------------
 2020_cte as
 (
 select country, sum_of_comments as 2020_c, ranked as 2020_rank
 from ranked_cte
 where time = '01-2020'
 ),
-
+-- ------------------------------------------------------------------------------------------------------------
 final_cte as
 (
 select 2020_cte.country, 2019_c, 2019_rank, 2020_c, 2020_rank 
@@ -40,5 +40,7 @@ from 2020_cte join 2019_cte
 on 2020_cte.country = 2019_cte.country
 and 2020_cte.2020_rank < 2019_cte.2019_rank
 )
-
+-- ------------------------------------------------------------------------------------------------------------
 select country from final_cte
+
+
