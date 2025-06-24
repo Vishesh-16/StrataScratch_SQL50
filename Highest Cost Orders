@@ -1,0 +1,9 @@
+select first_name, order_date, max(total_cost) as max_cost
+from
+(
+    select o.cust_id, first_name, order_date, sum(total_order_cost) as total_cost 
+    from orders o join customers c 
+    on o.cust_id = c.id
+    where order_date between '2019-02-01' and '2019-05-01'
+    group by o.cust_id,order_date
+)tb1
