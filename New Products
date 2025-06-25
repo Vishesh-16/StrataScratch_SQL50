@@ -1,0 +1,9 @@
+select company_name, 2020_cars - 2019_cars as total_launch 
+from
+(
+select company_name, 
+       sum(case when year = '2019' then 1 else 0 end) as 2019_cars,
+       sum(case when year = '2020' then 1 else 0 end) as 2020_cars
+from car_launches
+group by company_name
+)tb1
